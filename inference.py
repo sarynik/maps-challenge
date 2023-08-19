@@ -11,13 +11,12 @@ MODEL_CHECPOINT_PATH = f"{os.path.join(Path(__file__).parent,'content', 'outputs
 def validate_input(data):
     """
     Generic validation function to check all input datatypes
-    :param data:
     """
     # List of expected keys and their types
     expected_keys_types = {
         "map_id": int,
         "map_title": str,
-        "map_rating_": int,
+        "map_rating": int,
         "idea_id": int,
         "idea_parent_id": (type(None), int),  # Can be None or int
         "idea_title": str
@@ -39,13 +38,13 @@ def validate_input(data):
     # Additional checks (e.g. length checks or value range checks) can be added if necessary
 
 def contruct_features(input_data):
-    df = pd.DataFrame(input_data)
+    """
+    Construct the features as defined in the ML_challenge notebook, by concatenating map_title and idea_title text
+    """
+    df_input = pd.DataFrame(input_data)
 
-    df['text'] = df.groupby("map_id")['idea_title'].transform(
+    df_input['text'] = df_input.groupby("map_id")['idea_title'].transform(
         lambda x: ' [SEP] '.join(x)).drop_duplicates()
-    df_input = df.drop_duplicates("map_id").dropna(subset="text")
-    df_input = df_input[~df_input['map_category_name'].isin(["Life", "Productivity", "Entertainment"])]
-
     df_input['text'] = "[CLS] " + df_input['map_title'] + " [SEP] " + df_input['text'] + " [SEP]"
 
     feature = df_input['text'][0]
