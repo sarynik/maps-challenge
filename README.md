@@ -1,3 +1,10 @@
+## Structure
+
+The project is split into two notebooks and a flask app.
+The EDA notebook contains the initial exploratory data analysis, while the ML_challenge_BERT noteobook contains the model training code.
+
+The local endpoint code is in inference.py
+
 Setup
 
 Within the project directory run:
